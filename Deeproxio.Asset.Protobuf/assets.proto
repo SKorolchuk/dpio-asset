@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+option csharp_namespace = "Deeproxio.Asset.API";
+
+package Asset;
+
+service AssetService {
+  rpc Download (AssetRequest) returns (Asset);
+  rpc Info (AssetRequest) returns (AssetInfo);
+  rpc Upload (Asset) returns (StatusResponse);
+  rpc Delete (AssetRequest) returns (StatusResponse);
+  rpc UpdateMetadata (AssetInfo) returns (StatusResponse);
+}
+
+message StatusResponse {
+    int32 code = 1;
+    string message = 2;
+}
+
+message AssetRequest {
+    string id = 1;
+}
+
+message Asset {
+    string id = 1;
+    AssetInfo info = 2;
+
+    bytes blob = 3;
+}
+
+message AssetInfo {
+    string name = 1;
+    string storePrefix = 2;
+    string blobExtension = 3;
+    string blobMimeType = 4;
+    AssetType mediaType = 5;
+    map<string, string> metadata = 6;
+}
+
+enum AssetType {
+    UNDEFINED = 0;
+    IMAGE = 1;
+    MESH = 2;
+    VIDEO = 3;
+    AUDIO = 4;
+}

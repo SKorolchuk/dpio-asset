@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Deeproxio.Asset.BLL.Contract\Deeproxio.Asset.BLL.Contract.csproj" />
+    <ProjectReference Include="..\Deeproxio.Asset.DAL\Deeproxio.Asset.DAL.csproj" />
+  </ItemGroup>
+
+</Project>
