@@ -1,0 +1,95 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29209.62
+MinimumVisualStudioVersion = 15.0.26124.0
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{A1455ABF-E390-450E-AD13-ECE7D768A0BD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{6BDBBFF0-8C2E-4209-82A2-AC9ED7CE924A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8CB25705-8715-4D97-9E24-75A789ADBE2D}"
+	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deeproxio.Asset.API", "Deeproxio.Asset.API\Deeproxio.Asset.API.csproj", "{B961F396-0213-499B-A09D-705D92D406B1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deeproxio.Asset.Protobuf", "Deeproxio.Asset.Protobuf", "{E838168C-0FA1-4A2A-890E-E59D0365389C}"
+	ProjectSection(SolutionItems) = preProject
+		Deeproxio.Asset.Protobuf\assets.proto = Deeproxio.Asset.Protobuf\assets.proto
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deeproxio.Asset.API.Client", "Deeproxio.Asset.API.Client\Deeproxio.Asset.API.Client.csproj", "{1F818305-36FB-4CA5-B721-9ACC5E7E9083}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deeproxio.Asset.BLL", "Deeproxio.Asset.BLL\Deeproxio.Asset.BLL.csproj", "{F5076FE6-3144-4821-8321-0A78D67A79B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deeproxio.Asset.BLL.Contract", "Deeproxio.Asset.BLL.Contract\Deeproxio.Asset.BLL.Contract.csproj", "{6AB43CA9-6AE6-4D24-991E-6157DBC2FBAE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deeproxio.Asset.BLL.Tests", "Deeproxio.Asset.BLL.Tests\Deeproxio.Asset.BLL.Tests.csproj", "{3A06953B-3233-4F1C-A3B9-76FD1B7457F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deeproxio.Asset.DAL", "Deeproxio.Asset.DAL\Deeproxio.Asset.DAL.csproj", "{F06287BB-8A8E-4F4F-9C7C-A3CCFC83FADE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deeproxio.Asset.DAL.Tests", "Deeproxio.Asset.DAL.Tests\Deeproxio.Asset.DAL.Tests.csproj", "{08E85793-9EFC-428A-B8E7-E7711BB67CC8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deeproxio.Asset.API.Tests", "Deeproxio.Asset.API.Tests\Deeproxio.Asset.API.Tests.csproj", "{5FC1574F-982D-4BC0-9AA2-DD325F169DA6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B961F396-0213-499B-A09D-705D92D406B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B961F396-0213-499B-A09D-705D92D406B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B961F396-0213-499B-A09D-705D92D406B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B961F396-0213-499B-A09D-705D92D406B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F818305-36FB-4CA5-B721-9ACC5E7E9083}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F818305-36FB-4CA5-B721-9ACC5E7E9083}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F818305-36FB-4CA5-B721-9ACC5E7E9083}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F818305-36FB-4CA5-B721-9ACC5E7E9083}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5076FE6-3144-4821-8321-0A78D67A79B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5076FE6-3144-4821-8321-0A78D67A79B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5076FE6-3144-4821-8321-0A78D67A79B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5076FE6-3144-4821-8321-0A78D67A79B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AB43CA9-6AE6-4D24-991E-6157DBC2FBAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AB43CA9-6AE6-4D24-991E-6157DBC2FBAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AB43CA9-6AE6-4D24-991E-6157DBC2FBAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AB43CA9-6AE6-4D24-991E-6157DBC2FBAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A06953B-3233-4F1C-A3B9-76FD1B7457F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A06953B-3233-4F1C-A3B9-76FD1B7457F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A06953B-3233-4F1C-A3B9-76FD1B7457F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A06953B-3233-4F1C-A3B9-76FD1B7457F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F06287BB-8A8E-4F4F-9C7C-A3CCFC83FADE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F06287BB-8A8E-4F4F-9C7C-A3CCFC83FADE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F06287BB-8A8E-4F4F-9C7C-A3CCFC83FADE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F06287BB-8A8E-4F4F-9C7C-A3CCFC83FADE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08E85793-9EFC-428A-B8E7-E7711BB67CC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08E85793-9EFC-428A-B8E7-E7711BB67CC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08E85793-9EFC-428A-B8E7-E7711BB67CC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08E85793-9EFC-428A-B8E7-E7711BB67CC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FC1574F-982D-4BC0-9AA2-DD325F169DA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FC1574F-982D-4BC0-9AA2-DD325F169DA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FC1574F-982D-4BC0-9AA2-DD325F169DA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FC1574F-982D-4BC0-9AA2-DD325F169DA6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B961F396-0213-499B-A09D-705D92D406B1} = {A1455ABF-E390-450E-AD13-ECE7D768A0BD}
+		{E838168C-0FA1-4A2A-890E-E59D0365389C} = {A1455ABF-E390-450E-AD13-ECE7D768A0BD}
+		{1F818305-36FB-4CA5-B721-9ACC5E7E9083} = {A1455ABF-E390-450E-AD13-ECE7D768A0BD}
+		{F5076FE6-3144-4821-8321-0A78D67A79B6} = {6BDBBFF0-8C2E-4209-82A2-AC9ED7CE924A}
+		{6AB43CA9-6AE6-4D24-991E-6157DBC2FBAE} = {6BDBBFF0-8C2E-4209-82A2-AC9ED7CE924A}
+		{3A06953B-3233-4F1C-A3B9-76FD1B7457F0} = {6BDBBFF0-8C2E-4209-82A2-AC9ED7CE924A}
+		{F06287BB-8A8E-4F4F-9C7C-A3CCFC83FADE} = {6BDBBFF0-8C2E-4209-82A2-AC9ED7CE924A}
+		{08E85793-9EFC-428A-B8E7-E7711BB67CC8} = {6BDBBFF0-8C2E-4209-82A2-AC9ED7CE924A}
+		{5FC1574F-982D-4BC0-9AA2-DD325F169DA6} = {A1455ABF-E390-450E-AD13-ECE7D768A0BD}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {41BA8588-CA04-4187-ABAD-2CA4EE8B1B09}
+	EndGlobalSection
+EndGlobal
