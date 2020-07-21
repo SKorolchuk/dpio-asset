@@ -22,9 +22,11 @@ namespace Deeproxio.Asset.DAL.Repositories
             _context = context;
         }
 
-        public async Task Create(BLL.Contract.Entities.Asset asset, CancellationToken cancellationToken = default)
+        public async Task<bool> Create(BLL.Contract.Entities.Asset asset, CancellationToken cancellationToken = default)
         {
             await _context.Assets.InsertOneAsync(asset, new InsertOneOptions(), cancellationToken);
+
+            return true;
         }
 
         public async Task<bool> Delete(string id, CancellationToken cancellationToken = default)
@@ -36,8 +38,7 @@ namespace Deeproxio.Asset.DAL.Repositories
                 .Assets
                 .DeleteOneAsync(filter, cancellationToken);
 
-            return result.IsAcknowledged
-                && result.DeletedCount > 0;
+            return result.IsAcknowledged;
         }
 
         public async Task<IEnumerable<BLL.Contract.Entities.Asset>> GetAll(CancellationToken cancellationToken = default)
@@ -62,8 +63,7 @@ namespace Deeproxio.Asset.DAL.Repositories
                 .Assets
                 .ReplaceOneAsync(filter: item => item.Id == asset.Id, replacement: asset, cancellationToken: cancellationToken);
 
-            return updateResult.IsAcknowledged
-                    && updateResult.ModifiedCount > 0;
+            return updateResult.IsAcknowledged;
         }
     }
 }

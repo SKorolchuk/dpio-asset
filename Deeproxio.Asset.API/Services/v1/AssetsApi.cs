@@ -1,7 +1,9 @@
-﻿using System.Net;
+﻿using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using Deeproxio.Asset.BLL.Contract.Services;
+using Google.Protobuf;
 using Grpc.Core;
 
 namespace Deeproxio.Asset.API.Services.v1
@@ -21,7 +23,9 @@ namespace Deeproxio.Asset.API.Services.v1
         {
             var assetModel = _mapper.Map<BLL.Contract.Entities.Asset>(asset);
 
-            if (await _assetService.Put(assetModel, context.CancellationToken))
+            using var blobStream = new MemoryStream(asset.Blob.ToByteArray());
+
+            if (await _assetService.Put(assetModel, blobStream, context.CancellationToken))
             {
                 return new StatusResponse
                 {
@@ -41,9 +45,14 @@ namespace Deeproxio.Asset.API.Services.v1
 
         public override async Task<Asset> Download(AssetRequest request, ServerCallContext context)
         {
-            var assetModel = await _assetService.GetById(request.Id, context.CancellationToken);
+            using var blobStream = new MemoryStream();
 
-            return _mapper.Map<Asset>(assetModel);
+            var assetModel = await _assetService.GetById(request.Id, blobStream, context.CancellationToken);
+
+            var asset = _mapper.Map<Asset>(assetModel);
+            asset.Blob = ByteString.CopyFrom(blobStream.ToArray());
+
+            return asset;
         }
 
         public override async Task<AssetInfo> Info(AssetRequest request, ServerCallContext context)
@@ -55,7 +64,7 @@ namespace Deeproxio.Asset.API.Services.v1
 
         public override async Task<StatusResponse> Delete(AssetRequest request, ServerCallContext context)
         {
-            if (await _assetService.Put(request.Id, context.CancellationToken))
+            if (await _assetService.Delete(request.Id, context.CancellationToken))
             {
                 return new StatusResponse
                 {

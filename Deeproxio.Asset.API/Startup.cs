@@ -51,10 +51,10 @@ namespace Deeproxio.Asset.API
                 options.Interceptors.Add<LoggerInterceptor>();
             });
 
-            services.AddGrpcValidation();
-
             services.AddValidator<AssetValidator>();
             services.AddValidator<AssetInfoValidator>();
+
+            services.AddGrpcValidation();
 
             services.AddHealthChecks();
         }
@@ -68,9 +68,9 @@ namespace Deeproxio.Asset.API
             else
             {
                 app.UseHsts();
+                app.UseHttpsRedirection();
             }
 
-            app.UseHttpsRedirection();
             app.UseRouting();
 
             app.UseCors(builder => builder

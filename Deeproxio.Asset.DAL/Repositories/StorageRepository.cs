@@ -36,6 +36,8 @@ namespace Deeproxio.Asset.DAL.Repositories
 
         public async Task<bool> Delete(string id, CancellationToken cancellationToken = default)
         {
+            await EnsureBucketExists(cancellationToken);
+
             try
             {
                 await _context
@@ -54,6 +56,8 @@ namespace Deeproxio.Asset.DAL.Repositories
 
         public async Task GetById(string id, Stream blobStream, CancellationToken cancellationToken = default)
         {
+            await EnsureBucketExists(cancellationToken);
+
             await _context
                 .StorageObjects
                 .GetObjectAsync(
@@ -69,6 +73,8 @@ namespace Deeproxio.Asset.DAL.Repositories
 
         public async Task<bool> Put(string id, Stream blobStream, CancellationToken cancellationToken = default)
         {
+            await EnsureBucketExists(cancellationToken);
+
             await _context
                 .StorageObjects
                 .PutObjectAsync(
@@ -80,6 +86,16 @@ namespace Deeproxio.Asset.DAL.Repositories
                 );
 
             return true;
+        }
+
+        private async Task EnsureBucketExists(CancellationToken cancellationToken = default)
+        {
+            var bucketExists = await _context.BucketObjects.BucketExistsAsync(_settings.BucketName, cancellationToken);
+
+            if (!bucketExists)
+            {
+                await _context.BucketObjects.MakeBucketAsync(_settings.BucketName, cancellationToken: cancellationToken);
+            }
         }
     }
 }

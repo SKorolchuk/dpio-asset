@@ -52,7 +52,7 @@ namespace Deeproxio.Asset.API
                 {
                     webBuilder.ConfigureKestrel(serverOptions =>
                     {
-                        // Set properties and call methods on options
+                        serverOptions.ConfigureEndpointDefaults(lo => lo.Protocols = HttpProtocols.Http2);
                     }).UseKestrel().UseStartup<Startup>();
                 });
     }

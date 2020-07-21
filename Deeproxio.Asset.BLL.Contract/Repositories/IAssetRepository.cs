@@ -8,7 +8,7 @@ namespace Deeproxio.Asset.BLL.Contract.Repositories
     {
         Task<IEnumerable<Entities.Asset>> GetAll(CancellationToken cancellationToken = default);
         Task<Entities.Asset> GetById(string id, CancellationToken cancellationToken = default);
-        Task Create(Entities.Asset asset, CancellationToken cancellationToken = default);
+        Task<bool> Create(Entities.Asset asset, CancellationToken cancellationToken = default);
         Task<bool> Update(Entities.Asset asset, CancellationToken cancellationToken = default);
         Task<bool> Delete(string id, CancellationToken cancellationToken = default);
     }
