@@ -2,14 +2,14 @@ syntax = "proto3";
 
 option csharp_namespace = "Deeproxio.Asset.API";
 
-package Asset;
+package v1;
 
 service AssetService {
   rpc Download (AssetRequest) returns (Asset);
   rpc Info (AssetRequest) returns (AssetInfo);
   rpc Upload (Asset) returns (StatusResponse);
   rpc Delete (AssetRequest) returns (StatusResponse);
-  rpc UpdateMetadata (AssetInfo) returns (StatusResponse);
+  rpc UpdateMetadata (UpdateMetadataRequest) returns (StatusResponse);
 }
 
 message StatusResponse {
@@ -19,6 +19,11 @@ message StatusResponse {
 
 message AssetRequest {
     string id = 1;
+}
+
+message UpdateMetadataRequest {
+    string id = 1;
+    AssetInfo assetInfo = 2;
 }
 
 message Asset {

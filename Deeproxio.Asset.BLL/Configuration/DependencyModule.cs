@@ -8,6 +8,7 @@ namespace Deeproxio.Asset.BLL.Configuration
     {
         public void RegisterTypes(IServiceCollection services)
         {
+            services.AddTransient<IStorageItemPathProvider, StorageItemPathProvider>();
             services.AddTransient<IAssetService, AssetService>();
         }
     }

@@ -7,6 +7,9 @@ namespace Deeproxio.Asset.DAL.Data
 {
     public class StorageContext : IStorageContext
     {
+        public IObjectOperations StorageObjects { get; }
+        public IBucketOperations BucketObjects { get; }
+
         public StorageContext(IStorageSettings storageSettings)
         {
             var retryPolicy = StorageRetryPolicy.GetDefaultRetryPolicy();
@@ -27,9 +30,8 @@ namespace Deeproxio.Asset.DAL.Data
                        (sender, certificate, chain, sslPolicyErrors) => true;
 
                 StorageObjects = client;
+                BucketObjects = client;
             }
         }
-
-        public IObjectOperations StorageObjects { get; }
     }
 }
