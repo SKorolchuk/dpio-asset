@@ -1,41 +1,82 @@
-﻿using Deeproxio.Asset.API.Services;
+﻿using System;
+using System.IO;
+using AutoMapper;
+using Calzolari.Grpc.AspNetCore.Validation;
+using Deeproxio.Asset.API.Infrastructure;
+using Deeproxio.Asset.API.Services;
+using Deeproxio.Asset.API.Services.v1;
+using Deeproxio.Asset.API.Validation;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Prometheus;
 
 namespace Deeproxio.Asset.API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+        public Startup(IWebHostEnvironment env)
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddJsonFile($"secrets/appsettings.json", optional: true)
+                .AddEnvironmentVariables();
+
+            Configuration = builder.Build();
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
+            services
+                .AddAutoMapper(typeof(Startup).Assembly)
+                .AddCors();
+
             new DAL.Configuration.DependencyModule().RegisterTypes(services, Configuration);
             new BLL.Configuration.DependencyModule().RegisterTypes(services);
 
-            services.AddGrpc();
+            services.AddGrpc(options =>
+            {
+                options.EnableMessageValidation();
+                options.Interceptors.Add<LoggerInterceptor>();
+            });
+
+            services.AddGrpcValidation();
+
+            services.AddValidator<AssetValidator>();
+            services.AddValidator<AssetInfoValidator>();
+
+            services.AddHealthChecks();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.EnvironmentName.Equals("Development", StringComparison.InvariantCultureIgnoreCase))
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseHsts();
+            }
 
+            app.UseHttpsRedirection();
             app.UseRouting();
+
+            app.UseCors(builder => builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .WithExposedHeaders("Grpc-Status", "Grpc-Message"));
+
+            app.UseMetricServer();
 
             app.UseEndpoints(endpoints =>
             {
@@ -43,8 +84,24 @@ namespace Deeproxio.Asset.API
 
                 endpoints.MapGet("/", async context =>
                 {
-                    await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
+                    await context.Response
+                        .WriteAsync("Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
                 });
+
+                endpoints.MapHealthChecks("/ready", new HealthCheckOptions()
+                {
+                    Predicate = (check) => true,
+                    // The following StatusCodes are the default assignments for
+                    // the HealthCheckStatus properties.
+                    ResultStatusCodes =
+                    {
+                        [HealthStatus.Healthy] = StatusCodes.Status200OK,
+                        [HealthStatus.Degraded] = StatusCodes.Status200OK,
+                        [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
+                    },
+                    // The default value is false.
+                    AllowCachingResponses = false
+                }).WithDisplayName("Asset API Health Check");
             });
         }
     }

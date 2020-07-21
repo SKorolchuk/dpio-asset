@@ -2,7 +2,7 @@ syntax = "proto3";
 
 option csharp_namespace = "Deeproxio.Asset.API";
 
-package Asset;
+package v1;
 
 service AssetService {
   rpc Download (AssetRequest) returns (Asset);

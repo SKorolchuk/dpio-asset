@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+      <PackageReference Include="Calzolari.Grpc.Net.Client.Validation" Version="3.1.2" />
       <PackageReference Include="Google.Protobuf" Version="3.12.3" />
       <PackageReference Include="Grpc.Net.ClientFactory" Version="2.30.0" />
       <PackageReference Include="Grpc.Tools" Version="2.30.0">
@@ -14,7 +15,7 @@
   </ItemGroup>
 
     <ItemGroup>
-        <Protobuf Include="..\Deeproxio.Asset.Protobuf\assets.proto" GrpcServices="Client" Link="Protos\assets.proto" />
+        <Protobuf Include="..\Deeproxio.Asset.Protobuf\v1\assets.proto" GrpcServices="Client" Link="Protos\v1\assets.proto" />
     </ItemGroup>
     
 </Project>

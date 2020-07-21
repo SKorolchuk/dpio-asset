@@ -15,26 +15,28 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deeproxio.Asset.API", "Deeproxio.Asset.API\Deeproxio.Asset.API.csproj", "{B961F396-0213-499B-A09D-705D92D406B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deeproxio.Asset.API", "Deeproxio.Asset.API\Deeproxio.Asset.API.csproj", "{B961F396-0213-499B-A09D-705D92D406B1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deeproxio.Asset.Protobuf", "Deeproxio.Asset.Protobuf", "{E838168C-0FA1-4A2A-890E-E59D0365389C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deeproxio.Asset.API.Client", "Deeproxio.Asset.API.Client\Deeproxio.Asset.API.Client.csproj", "{1F818305-36FB-4CA5-B721-9ACC5E7E9083}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deeproxio.Asset.BLL", "Deeproxio.Asset.BLL\Deeproxio.Asset.BLL.csproj", "{F5076FE6-3144-4821-8321-0A78D67A79B6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deeproxio.Asset.BLL.Contract", "Deeproxio.Asset.BLL.Contract\Deeproxio.Asset.BLL.Contract.csproj", "{6AB43CA9-6AE6-4D24-991E-6157DBC2FBAE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deeproxio.Asset.BLL.Tests", "Deeproxio.Asset.BLL.Tests\Deeproxio.Asset.BLL.Tests.csproj", "{3A06953B-3233-4F1C-A3B9-76FD1B7457F0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deeproxio.Asset.DAL", "Deeproxio.Asset.DAL\Deeproxio.Asset.DAL.csproj", "{F06287BB-8A8E-4F4F-9C7C-A3CCFC83FADE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deeproxio.Asset.DAL.Tests", "Deeproxio.Asset.DAL.Tests\Deeproxio.Asset.DAL.Tests.csproj", "{08E85793-9EFC-428A-B8E7-E7711BB67CC8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deeproxio.Asset.API.Tests", "Deeproxio.Asset.API.Tests\Deeproxio.Asset.API.Tests.csproj", "{5FC1574F-982D-4BC0-9AA2-DD325F169DA6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v1", "v1", "{27F4FA6C-D73D-4930-8AE3-380CB1E27535}"
 	ProjectSection(SolutionItems) = preProject
-		Deeproxio.Asset.Protobuf\assets.proto = Deeproxio.Asset.Protobuf\assets.proto
+		Deeproxio.Asset.Protobuf\v1\assets.proto = Deeproxio.Asset.Protobuf\v1\assets.proto
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deeproxio.Asset.API.Client", "Deeproxio.Asset.API.Client\Deeproxio.Asset.API.Client.csproj", "{1F818305-36FB-4CA5-B721-9ACC5E7E9083}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deeproxio.Asset.BLL", "Deeproxio.Asset.BLL\Deeproxio.Asset.BLL.csproj", "{F5076FE6-3144-4821-8321-0A78D67A79B6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deeproxio.Asset.BLL.Contract", "Deeproxio.Asset.BLL.Contract\Deeproxio.Asset.BLL.Contract.csproj", "{6AB43CA9-6AE6-4D24-991E-6157DBC2FBAE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deeproxio.Asset.BLL.Tests", "Deeproxio.Asset.BLL.Tests\Deeproxio.Asset.BLL.Tests.csproj", "{3A06953B-3233-4F1C-A3B9-76FD1B7457F0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deeproxio.Asset.DAL", "Deeproxio.Asset.DAL\Deeproxio.Asset.DAL.csproj", "{F06287BB-8A8E-4F4F-9C7C-A3CCFC83FADE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deeproxio.Asset.DAL.Tests", "Deeproxio.Asset.DAL.Tests\Deeproxio.Asset.DAL.Tests.csproj", "{08E85793-9EFC-428A-B8E7-E7711BB67CC8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deeproxio.Asset.API.Tests", "Deeproxio.Asset.API.Tests\Deeproxio.Asset.API.Tests.csproj", "{5FC1574F-982D-4BC0-9AA2-DD325F169DA6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -88,6 +90,7 @@ Global
 		{F06287BB-8A8E-4F4F-9C7C-A3CCFC83FADE} = {6BDBBFF0-8C2E-4209-82A2-AC9ED7CE924A}
 		{08E85793-9EFC-428A-B8E7-E7711BB67CC8} = {6BDBBFF0-8C2E-4209-82A2-AC9ED7CE924A}
 		{5FC1574F-982D-4BC0-9AA2-DD325F169DA6} = {A1455ABF-E390-450E-AD13-ECE7D768A0BD}
+		{27F4FA6C-D73D-4930-8AE3-380CB1E27535} = {E838168C-0FA1-4A2A-890E-E59D0365389C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {41BA8588-CA04-4187-ABAD-2CA4EE8B1B09}
