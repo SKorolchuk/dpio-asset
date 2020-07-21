@@ -3,19 +3,16 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Deeproxio.Asset.BLL.Contract.Services;
 using Grpc.Core;
-using Microsoft.Extensions.Logging;
 
 namespace Deeproxio.Asset.API.Services.v1
 {
     public class AssetsApi : AssetService.AssetServiceBase
     {
-        private readonly ILogger<AssetsApi> _logger;
         private readonly IAssetService _assetService;
         private readonly IMapper _mapper;
 
-        public AssetsApi(ILogger<AssetsApi> logger, IAssetService assetService, IMapper mapper)
+        public AssetsApi(IAssetService assetService, IMapper mapper)
         {
-            _logger = logger;
             _assetService = assetService;
             _mapper = mapper;
         }
@@ -24,7 +21,7 @@ namespace Deeproxio.Asset.API.Services.v1
         {
             var assetModel = _mapper.Map<BLL.Contract.Entities.Asset>(asset);
 
-            if (await _assetService.Upload(assetModel, context.CancellationToken))
+            if (await _assetService.Put(assetModel, context.CancellationToken))
             {
                 return new StatusResponse
                 {
@@ -42,24 +39,60 @@ namespace Deeproxio.Asset.API.Services.v1
             }
         }
 
-        public override Task<Asset> Download(AssetRequest request, ServerCallContext context)
+        public override async Task<Asset> Download(AssetRequest request, ServerCallContext context)
         {
-            return base.Download(request, context);
+            var assetModel = await _assetService.GetById(request.Id, context.CancellationToken);
+
+            return _mapper.Map<Asset>(assetModel);
         }
 
-        public override Task<AssetInfo> Info(AssetRequest request, ServerCallContext context)
+        public override async Task<AssetInfo> Info(AssetRequest request, ServerCallContext context)
         {
-            return base.Info(request, context);
+            var assetModel = await _assetService.GetInfoById(request.Id, context.CancellationToken);
+
+            return _mapper.Map<AssetInfo>(assetModel);
         }
 
-        public override Task<StatusResponse> Delete(AssetRequest request, ServerCallContext context)
+        public override async Task<StatusResponse> Delete(AssetRequest request, ServerCallContext context)
         {
-            return base.Delete(request, context);
+            if (await _assetService.Put(request.Id, context.CancellationToken))
+            {
+                return new StatusResponse
+                {
+                    Code = (int)HttpStatusCode.OK,
+                    Message = $"Asset Delete - {request.Id} has been completed"
+                };
+            }
+            else
+            {
+                return new StatusResponse
+                {
+                    Code = (int)HttpStatusCode.BadRequest,
+                    Message = $"Asset Delete - {request.Id} error"
+                };
+            }
         }
 
-        public override Task<StatusResponse> UpdateMetadata(AssetInfo request, ServerCallContext context)
+        public override async Task<StatusResponse> UpdateMetadata(UpdateMetadataRequest request, ServerCallContext context)
         {
-            return base.UpdateMetadata(request, context);
+            var assetInfoModel = _mapper.Map<BLL.Contract.Entities.AssetInfo>(request.AssetInfo);
+
+            if (await _assetService.PutMetadata(request.Id, assetInfoModel, context.CancellationToken))
+            {
+                return new StatusResponse
+                {
+                    Code = (int)HttpStatusCode.OK,
+                    Message = $"Asset UpdateMetadata - {request.Id} has been completed"
+                };
+            }
+            else
+            {
+                return new StatusResponse
+                {
+                    Code = (int)HttpStatusCode.BadRequest,
+                    Message = $"Asset UpdateMetadata - {request.Id} error"
+                };
+            }
         }
     }
 }

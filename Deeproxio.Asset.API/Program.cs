@@ -42,12 +42,12 @@ namespace Deeproxio.Asset.API
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .UseSerilog()
                 .ConfigureServices((context, services) =>
                 {
                     services.Configure<KestrelServerOptions>(
                         context.Configuration.GetSection("Kestrel"));
                 })
+                .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.ConfigureKestrel(serverOptions =>

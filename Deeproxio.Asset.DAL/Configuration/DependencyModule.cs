@@ -16,6 +16,10 @@ namespace Deeproxio.Asset.DAL.Configuration
             services.AddSingleton<IAssetsDatabaseSettings>(sp =>
                 sp.GetRequiredService<IOptions<AssetsDatabaseSettings>>().Value);
 
+            services.Configure<StorageSettings>(configuration.GetSection(nameof(StorageSettings)));
+            services.AddSingleton<IStorageSettings>(sp =>
+                sp.GetRequiredService<IOptions<StorageSettings>>().Value);
+
             services.AddTransient<IAssetDataContext, AssetDataContext>();
             services.AddTransient<IAssetRepository, AssetRepository>();
 

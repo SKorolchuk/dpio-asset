@@ -3,7 +3,6 @@ using System.IO;
 using AutoMapper;
 using Calzolari.Grpc.AspNetCore.Validation;
 using Deeproxio.Asset.API.Infrastructure;
-using Deeproxio.Asset.API.Services;
 using Deeproxio.Asset.API.Services.v1;
 using Deeproxio.Asset.API.Validation;
 using Microsoft.AspNetCore.Builder;
@@ -14,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Prometheus;
+using Serilog;
 
 namespace Deeproxio.Asset.API
 {
@@ -35,6 +35,9 @@ namespace Deeproxio.Asset.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddLogging(loggingBuilder =>
+                loggingBuilder.AddSerilog(dispose: true));
+
             services
                 .AddAutoMapper(typeof(Startup).Assembly)
                 .AddCors();
@@ -77,6 +80,8 @@ namespace Deeproxio.Asset.API
                 .WithExposedHeaders("Grpc-Status", "Grpc-Message"));
 
             app.UseMetricServer();
+
+            app.UseSerilogRequestLogging();
 
             app.UseEndpoints(endpoints =>
             {

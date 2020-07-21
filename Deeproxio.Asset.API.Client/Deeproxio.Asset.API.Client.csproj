@@ -1,7 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+      <PackageId>Deeproxio.Asset.API.Client</PackageId>
+      <Version>1.0.0</Version>
+      <Authors>Serge Korolchuk</Authors>
+      <PackageTags>dpio-asset-api-client</PackageTags>
+      <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+      <PackageProjectUrl>https://github.com/SKorolchuk/dpio-asset-api</PackageProjectUrl>
+      <TargetFramework>netcoreapp3.1</TargetFramework>
+      <DocumentationFile>bin\Debug\Deeproxio.Asset.API.Client.xml</DocumentationFile>
+      <Company>Deeproxio</Company>
+      <Product>Deeproxio.Asset.API.Client</Product>
+      <AssemblyVersion>1.0.0.0</AssemblyVersion>
+      <Description>gRPC Client for Deeproxio.Asset.API</Description>
+      <RepositoryUrl>https://github.com/SKorolchuk/dpio-asset-api</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,5 +29,13 @@
     <ItemGroup>
         <Protobuf Include="..\Deeproxio.Asset.Protobuf\v1\assets.proto" GrpcServices="Client" Link="Protos\v1\assets.proto" />
     </ItemGroup>
-    
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <DocumentationFile>bin\Release\Deeproxio.Asset.API.Client.xml</DocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <DocumentationFile>bin\Debug\Deeproxio.Asset.API.Client.xml</DocumentationFile>
+    </PropertyGroup>
+
 </Project>
