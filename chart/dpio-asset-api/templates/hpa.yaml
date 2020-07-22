@@ -1,0 +1,15 @@
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: "{{ include "dpio-asset-api.fullname" . }}-hpa"
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "dpio-asset-api.fullname" . }}
+  minReplicas: {{ .Values.image.minReplicaCount }}
+  maxReplicas: {{ .Values.image.maxReplicaCount }}
+{{- with .Values.metrics }}
+  metrics:
+  {{- toYaml . | nindent 8 }}
+{{- end }}

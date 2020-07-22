@@ -1,0 +1,117 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "dpio-asset-api.fullname" . }}
+  labels:
+    {{- include "dpio-asset-api.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "dpio-asset-api.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "dpio-asset-api.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.image.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      {{- if .Values.rbac.enabled }}
+      serviceAccountName: "{{ include "dpio-asset-api.serviceAccountName" . }}"
+      {{- else }}
+      serviceAccountName: "default"
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.name }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+            - name: healthcheck
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: PATH
+              value: "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+            - name: ENVIRONMENT
+              value: {{ required "Environment is not set." .Values.environment }}
+            - name: GRPC_PORT
+              value: "80"
+            - name: HEALTHCHECK_PORT
+              value: "8080"
+            - name: AssetsDatabaseSettings__ConnectionString
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "dpio-asset-api.fullname" . }}-secrets
+                  key: AssetsDatabaseSettingsConnectionString
+            - name: AssetsDatabaseSettings__DatabaseName
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "dpio-asset-api.fullname" . }}-secrets
+                  key: AssetsDatabaseSettingsDatabaseName
+            - name: AssetsDatabaseSettings__CollectionName
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "dpio-asset-api.fullname" . }}-secrets
+                  key: AssetsDatabaseSettingsCollectionName
+            - name: StorageSettings__EndpointUrl
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "dpio-asset-api.fullname" . }}-secrets
+                  key: StorageSettingsEndpointUrl
+            - name: StorageSettings__BucketName
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "dpio-asset-api.fullname" . }}-secrets
+                  key: StorageSettingsBucketName
+            - name: StorageSettings__AccessKey
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "dpio-asset-api.fullname" . }}-secrets
+                  key: StorageSettingsAccessKey
+            - name: StorageSettings__SecretKey
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "dpio-asset-api.fullname" . }}-secrets
+                  key: StorageSettingsSecretKey
+            - name: StorageSettings__EnableHTTPS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "dpio-asset-api.fullname" . }}-secrets
+                  key: StorageSettingsEnableHTTPS
+          livenessProbe:
+            httpGet:
+              path: /ready
+              port: healthcheck
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: healthcheck
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            timeoutSeconds: 5
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

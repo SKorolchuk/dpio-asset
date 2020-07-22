@@ -1,0 +1,219 @@
+name: Deeproxio.Asset.API-$(Date:yyyyMMdd)$(Rev:.r)
+
+trigger:
+  - "*"
+
+pool: Development
+
+variables:
+- group: Local-Harbor-Registry
+- name: buildConfiguration
+  value: 'Release'
+- name: ciImageTag
+  value: 'ci-$(Build.BuildId)'
+- name: assetApiClientVersion-major
+  value: '1'
+- name: assetApiClientVersion-minor
+  value: '0'
+- name: assetApiClientVersion-patch
+  value: '1'
+- name: helmRepositoryName
+  value: 'dpio-asset-api-chart'
+- name: serviceImageName
+  value: dpio-asset-api
+- name: releaseName
+  value: asset-api
+- name: nugetFeedPath
+  value: 'bdffb589-fa1b-4175-a1f2-258a26440e0e/99dd3995-6c0d-4a36-8762-ffca067e2672'
+
+stages:
+  - stage: 'Build'
+    displayName: 'Build API, API Client & Docker Images'
+    jobs: 
+    - job: 'Build'
+      displayName: 'Build Deeproxio.Asset.API'
+      pool: Development
+      variables:
+        dotnetSdkVersion: '3.1.x'
+      steps:
+
+      - task: UseDotNet@2
+        inputs:
+          version: '$(dotnetSdkVersion)'
+          performMultiLevelLookup: true
+        displayName: 'Use .NET Core SDK $(dotnetSdkVersion)'
+
+      - task: DotNetCoreCLI@2
+        inputs:
+          command: 'restore'
+          projects: '**/*.csproj'
+        displayName: 'Restore NuGet dependencies'
+
+      - task: DotNetCoreCLI@2
+        inputs:
+          command: 'build'
+          arguments: '--no-restore --configuration $(buildConfiguration)'
+          projects: '**/*.csproj'
+        displayName: 'Build Solution - $(buildConfiguration)'
+
+      - task: DotNetCoreCLI@2
+        inputs:
+          command: test
+          projects: '**/*Tests/*.csproj'
+          arguments: '--configuration Debug --collect "Code coverage"'
+        displayName: 'Run Unit Tests'
+
+      - task: DotNetCoreCLI@2
+        inputs:
+          command: 'publish'
+          publishWebProjects: True
+          arguments: '--configuration $(BuildConfiguration) --output publish'
+          projects: '**/Deeproxio.Asset.API.csproj'
+        displayName: 'Publish Deeproxio.Asset.API - $(buildConfiguration)'
+
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: publish
+          ArtifactName: Deeproxio.Asset.API
+        displayName: Publish Deeproxio.Asset.API Artifact
+
+      - task: DotNetCoreCLI@2
+        inputs:
+          command: pack
+          versioningScheme: byPrereleaseNumber
+          majorVersion: '$(assetApiClientVersion-major)'
+          minorVersion: '$(assetApiClientVersion-minor)'
+          patchVersion: '$(assetApiClientVersion-patch)'
+          configuration: '$(buildConfiguration)'
+          packagesToPack: '**/Deeproxio.Asset.API.Client.csproj'
+          packDirectory: '$(Build.ArtifactStagingDirectory)/nuget'
+        displayName: 'Pack Deeproxio.Asset.API.Client NuGet package - $(buildConfiguration)'
+
+      - task: DotNetCoreCLI@2
+        inputs:
+          command: push
+          packagesToPush: '$(Build.ArtifactStagingDirectory)/nuget/*.nupkg'
+          publishVstsFeed: '$(nugetFeedPath)'
+        displayName: 'Push Deeproxio.Asset.API.Client NuGet package - $(buildConfiguration)'
+
+      - publish: '$(Build.ArtifactStagingDirectory)/nuget'
+        artifact: nuget
+        displayName: 'Upload NuGet packages'
+
+      - script: >-
+          docker build -f ./Deeproxio.Asset.API/Dockerfile
+          -t $(harbor_endpoint)/$(serviceImageName):latest
+          -t $(harbor_endpoint)/$(serviceImageName):$(ciImageTag) .
+        displayName: 'docker build (API)'
+
+      - script: >-
+          docker login
+          -u $(harbor_username)
+          -p $(harbor_password)
+          $(harbor_endpoint)
+        displayName: 'docker login (Local Harbor Registry)'
+
+      - script: >-
+          docker push $(harbor_endpoint)/$(serviceImageName):$(ciImageTag) &&
+          docker push $(harbor_endpoint)/$(serviceImageName):latest
+        displayName: 'push docker image (API)'
+
+      - script: >-
+          helm lint ./chart/$(serviceImageName)
+          --debug
+          --logtostderr
+        displayName: 'Helm Chart static analysis'
+      
+      - script: >-
+          helm package ./chart/$(serviceImageName)
+          --logtostderr
+          --dependency-update
+          --app-version $(ciImageTag)
+          --destination $(Build.ArtifactStagingDirectory)/helm
+        displayName: 'Helm Chart package build'
+
+      - script: >-
+          helm registry login
+          -u $(harbor_username)
+          -p $(harbor_password)
+          $(harbor_endpoint)
+        displayName: 'helm login (Local Harbor Registry)'
+
+      - script: >-
+          helm chart save
+          ./chart/$(serviceImageName)
+          $(harbor_endpoint)/$(helmRepositoryName):$(ciImageTag)
+        displayName: 'Save Helm Chart to Local Harbor Registry'
+
+      - script: >-
+          helm chart push
+          $(harbor_endpoint)/$(helmRepositoryName):$(ciImageTag)
+        displayName: 'Push Helm Chart to Local Harbor Registry'
+
+      - publish: '$(Build.ArtifactStagingDirectory)/helm'
+        artifact: $(serviceImageName).helm-chart
+        displayName: 'Upload Helm Build Artifacts'
+  
+  - stage: 'Local'
+    displayName: 'Deploy to dpio-local environment'
+    dependsOn: Build
+    condition: succeeded()
+    jobs:
+    - deployment: Deploy
+      pool: Development
+      environment: dpio-local
+      variables:
+      - group: dpio-local-settings
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+
+            - template: stage-deployment.yml
+              parameters:
+                harbor_username: $(harbor_username)
+                harbor_password: $(harbor_password)
+                harbor_endpoint: $(harbor_endpoint)
+                helmRepositoryName: $(helmRepositoryName)
+                serviceImageName: $(serviceImageName)
+                ciImageTag: $(ciImageTag)
+                imagePullSecretName: $(imagePullSecretName)
+                namespace: $(namespace)
+                releaseName: $(releaseName)
+
+
+  - stage: 'Staging'
+    displayName: 'Deploy to dpio-staging environment'
+    dependsOn: Local
+    condition: |
+      and
+      (
+        succeeded(),
+        or
+        (
+          eq(variables['Build.SourceBranchName'], 'develop'),
+          eq(variables['Build.SourceBranchName'], 'master')
+        )
+      )
+    jobs:
+    - deployment: Deploy
+      pool: Development
+      environment: dpio-staging
+      variables:
+      - group: dpio-staging-settings
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+
+            - template: stage-deployment.yml
+              parameters:
+                harbor_username: $(harbor_username)
+                harbor_password: $(harbor_password)
+                harbor_endpoint: $(harbor_endpoint)
+                helmRepositoryName: $(helmRepositoryName)
+                serviceImageName: $(serviceImageName)
+                ciImageTag: $(ciImageTag)
+                imagePullSecretName: $(imagePullSecretName)
+                namespace: $(namespace)
+                releaseName: $(releaseName)

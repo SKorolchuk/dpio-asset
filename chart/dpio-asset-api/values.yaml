@@ -1,0 +1,116 @@
+# Default values for dpio-asset-api.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+name: dpio-asset-api
+
+## Provide a name in place of `dpio-asset-api` for `app:` labels
+##
+nameOverride:
+
+## Provide a name to substitute for the full names of resources
+##
+fullnameOverride:
+
+image:
+    name: dpio-asset-api
+    tag: latest
+    pullPolicy: Never
+    pullSecrets: []
+    minReplicaCount: 1
+    maxReplicaCount: 10
+
+replicaCount: 1
+environment: "Production"
+databaseCollectionName: "Assets"
+storageBucketName: "assets"
+useMinioHTTPS: "False"
+
+rbac:
+    enabled: true
+
+podSecurityContext: {}
+    # fsGroup: 2000
+
+securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+service:
+    name: dpio-asset-api-svc
+    type: ClusterIP
+    port: 80
+
+ingress:
+    enabled: true
+    annotations:
+        kubernetes.io/ingress.class: nginx
+        kubernetes.io/tls-acme: "true"
+        nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+        nginx.ingress.kubernetes.io/grpc-backend: "true"
+        nginx.ingress.kubernetes.io/rewrite-target: /$2
+    hosts:
+    - host: deeprox.io
+      paths:
+      - path: /assets/api(/|$)(.*)
+    # tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
+
+resources:
+    limits:
+        cpu: 100m
+        memory: 128Mi
+    requests:
+        cpu: 100m
+        memory: 128Mi
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+metrics:
+- type: Resource
+  resource:
+    name: cpu
+    target:
+        type: Utilization
+        averageUtilization: 30
+
+minio:
+  enabled: true
+  fullnameOverride: "dpio-asset-minio"
+  mode: standalone
+  accessKey:
+    password: "AKIAIOVNTDNA7EXAMPLE"
+  secretKey:
+    password: "wJalrBxbfFEMM/K7DSENG/bPxRfiCYEXAMPLEKEY"
+  service:
+    type: ClusterIP
+    port: 9000
+
+mongodb:
+  enabled: true
+  fullnameOverride: "dpio-asset-mongodb"
+  architecture: standalone
+  useStatefulSet: true
+  auth:
+    enabled: true
+    rootPassword: "123456789adm"
+    username: "AssetsAdmin"
+    password: "Asset&34zc!wq_"
+    database: "AssetsDB"
+  service:
+    type: ClusterIP
+    port: 27017

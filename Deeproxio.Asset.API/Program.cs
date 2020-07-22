@@ -50,10 +50,31 @@ namespace Deeproxio.Asset.API
                 .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.ConfigureKestrel(serverOptions =>
-                    {
-                        serverOptions.ConfigureEndpointDefaults(lo => lo.Protocols = HttpProtocols.Http2);
-                    }).UseKestrel().UseStartup<Startup>();
+                    webBuilder
+                        .ConfigureKestrel(serverOptions =>
+                        {
+                            if (!string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("HEALTHCHECK_PORT")) &&
+                                !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("GRPC_PORT")))
+                            {
+                                int.TryParse(Environment.GetEnvironmentVariable("HEALTHCHECK_PORT"), out var healthCheckPort);
+
+                                serverOptions.ListenAnyIP(healthCheckPort, listenOptions =>
+                                {
+                                    listenOptions.Protocols = HttpProtocols.Http1;
+                                });
+
+                                int.TryParse(Environment.GetEnvironmentVariable("GRPC_PORT"), out var grpcPort);
+
+                                serverOptions.ListenAnyIP(grpcPort, listenOptions =>
+                                {
+                                    listenOptions.Protocols = HttpProtocols.Http2;
+                                });
+                            } else {
+                                serverOptions.ConfigureEndpointDefaults(lo => lo.Protocols = HttpProtocols.Http2);
+                            }
+                        })
+                        .UseKestrel()
+                        .UseStartup<Startup>();
                 });
     }
 }
