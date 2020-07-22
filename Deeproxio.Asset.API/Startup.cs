@@ -65,11 +65,6 @@ namespace Deeproxio.Asset.API
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                app.UseHsts();
-                app.UseHttpsRedirection();
-            }
 
             app.UseRouting();
 

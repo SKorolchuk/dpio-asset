@@ -73,5 +73,6 @@ steps:
     --set image.tag=${{ parameters.ciImageTag }}
     --set image.pullPolicy=IfNotPresent
     --set image.pullSecrets[0].name=${{ parameters.imagePullSecretName  }}
+    --set ingress.enabled=false
   workingDirectory: ${{ parameters.serviceImageName }}
   displayName: "Install/Upgrade Helm Chart release in ${{ parameters.namespace }} K8s namespace"

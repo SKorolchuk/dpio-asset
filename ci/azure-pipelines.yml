@@ -85,7 +85,6 @@ stages:
           minorVersion: '$(assetApiClientVersion-minor)'
           patchVersion: '$(assetApiClientVersion-patch)'
           configuration: '$(buildConfiguration)'
-          includesymbols: true
           packagesToPack: '**/Deeproxio.Asset.API.Client.csproj'
           packDirectory: '$(Build.ArtifactStagingDirectory)/nuget'
         displayName: 'Pack Deeproxio.Asset.API.Client NuGet package - $(buildConfiguration)'
