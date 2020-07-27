@@ -3,7 +3,7 @@ using MongoDB.Driver;
 
 namespace Deeproxio.Asset.DAL.Data
 {
-    public class AssetDataContext : IAssetDataContext
+    internal class AssetDataContext : IAssetDataContext
     {
         public AssetDataContext(IAssetsDatabaseSettings settings)
         {

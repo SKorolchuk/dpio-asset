@@ -3,7 +3,7 @@ using Deeproxio.Asset.BLL.Contract.Services;
 
 namespace Deeproxio.Asset.BLL.Services
 {
-    public class StorageItemPathProvider : IStorageItemPathProvider
+    internal class StorageItemPathProvider : IStorageItemPathProvider
     {
         public string GeneratePath(string storePrefix)
         {

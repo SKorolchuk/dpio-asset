@@ -25,7 +25,7 @@ namespace Deeproxio.Asset.API.Services.v1
 
             using var blobStream = new MemoryStream(asset.Blob.ToByteArray());
 
-            if (await _assetService.Put(assetModel, blobStream, context.CancellationToken))
+            if (await _assetService.PutAsync(assetModel, blobStream, context.CancellationToken))
             {
                 return new StatusResponse
                 {
@@ -47,7 +47,7 @@ namespace Deeproxio.Asset.API.Services.v1
         {
             using var blobStream = new MemoryStream();
 
-            var assetModel = await _assetService.GetById(request.Id, blobStream, context.CancellationToken);
+            var assetModel = await _assetService.GetByIdAsync(request.Id, blobStream, context.CancellationToken);
 
             var asset = _mapper.Map<Asset>(assetModel);
             asset.Blob = ByteString.CopyFrom(blobStream.ToArray());
@@ -57,14 +57,14 @@ namespace Deeproxio.Asset.API.Services.v1
 
         public override async Task<AssetInfo> Info(AssetRequest request, ServerCallContext context)
         {
-            var assetModel = await _assetService.GetInfoById(request.Id, context.CancellationToken);
+            var assetModel = await _assetService.GetInfoByIdAsync(request.Id, context.CancellationToken);
 
             return _mapper.Map<AssetInfo>(assetModel);
         }
 
         public override async Task<StatusResponse> Delete(AssetRequest request, ServerCallContext context)
         {
-            if (await _assetService.Delete(request.Id, context.CancellationToken))
+            if (await _assetService.DeleteAsync(request.Id, context.CancellationToken))
             {
                 return new StatusResponse
                 {
@@ -86,7 +86,7 @@ namespace Deeproxio.Asset.API.Services.v1
         {
             var assetInfoModel = _mapper.Map<BLL.Contract.Entities.AssetInfo>(request.AssetInfo);
 
-            if (await _assetService.PutMetadata(request.Id, assetInfoModel, context.CancellationToken))
+            if (await _assetService.PutMetadataAsync(request.Id, assetInfoModel, context.CancellationToken))
             {
                 return new StatusResponse
                 {
