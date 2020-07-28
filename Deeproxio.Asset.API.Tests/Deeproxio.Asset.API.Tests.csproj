@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Grpc.Core.Testing" Version="2.30.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
     <PackageReference Include="Moq" Version="4.14.5" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />
@@ -18,7 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Deeproxio.Asset.API.Client\Deeproxio.Asset.API.Client.csproj" />
     <ProjectReference Include="..\Deeproxio.Asset.API\Deeproxio.Asset.API.csproj" />
   </ItemGroup>
 
