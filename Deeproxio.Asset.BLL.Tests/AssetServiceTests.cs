@@ -12,8 +12,8 @@ namespace Deeproxio.Asset.BLL.Tests
     {
         private MockRepository _mockRepository;
         private Mock<IAssetRepository> _assetRepositoryMock;
-        private Mock<IStorageRepository> _storageRepository;
-        private Mock<IStorageItemPathProvider> _storageItemPathProvider;
+        private Mock<IStorageRepository> _storageRepositoryMock;
+        private Mock<IStorageItemPathProvider> _storageItemPathProviderMock;
         private AssetService _target;
 
         [TestInitialize]
@@ -21,10 +21,10 @@ namespace Deeproxio.Asset.BLL.Tests
         {
             _mockRepository = new MockRepository(MockBehavior.Strict);
             _assetRepositoryMock = _mockRepository.Create<IAssetRepository>();
-            _storageRepository = _mockRepository.Create<IStorageRepository>();
-            _storageItemPathProvider = _mockRepository.Create<IStorageItemPathProvider>();
+            _storageRepositoryMock = _mockRepository.Create<IStorageRepository>();
+            _storageItemPathProviderMock = _mockRepository.Create<IStorageItemPathProvider>();
 
-            _target = new AssetService(_assetRepositoryMock.Object, _storageRepository.Object, _storageItemPathProvider.Object);
+            _target = new AssetService(_assetRepositoryMock.Object, _storageRepositoryMock.Object, _storageItemPathProviderMock.Object);
         }
 
         [TestCleanup]
@@ -39,19 +39,19 @@ namespace Deeproxio.Asset.BLL.Tests
             Assert.ThrowsException<ArgumentNullException>(() =>
                 new AssetService(
                     null,
-                    _storageRepository.Object,
-                    _storageItemPathProvider.Object)
+                    _storageRepositoryMock.Object,
+                    _storageItemPathProviderMock.Object)
                 );
             Assert.ThrowsException<ArgumentNullException>(() =>
                 new AssetService(
                     _assetRepositoryMock.Object,
                     null,
-                    _storageItemPathProvider.Object)
+                    _storageItemPathProviderMock.Object)
                 );
             Assert.ThrowsException<ArgumentNullException>(() =>
                 new AssetService(
                     _assetRepositoryMock.Object,
-                    _storageRepository.Object,
+                    _storageRepositoryMock.Object,
                     null)
                 );
         }
