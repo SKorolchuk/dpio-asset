@@ -6,8 +6,8 @@ namespace Deeproxio.Asset.BLL.Contract.Repositories
 {
     public interface IStorageRepository
     {
-        Task GetById(string id, Stream blobStream, CancellationToken cancellationToken = default);
-        Task<bool> Put(string id, Stream blobStream, CancellationToken cancellationToken = default);
-        Task<bool> Delete(string id, CancellationToken cancellationToken = default);
+        Task GetByIdAsync(string id, Stream blobStream, CancellationToken cancellationToken = default);
+        Task<bool> PutAsync(string id, Stream blobStream, CancellationToken cancellationToken = default);
+        Task<bool> DeleteAsync(string id, CancellationToken cancellationToken = default);
     }
 }

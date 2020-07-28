@@ -6,7 +6,7 @@ using RestSharp;
 
 namespace Deeproxio.Asset.DAL.Configuration
 {
-    public static class StorageRetryPolicy
+    internal static class StorageRetryPolicy
     {
         private const int DEFAULT_RETRY_COUNT = 3;
         private static readonly TimeSpan defaultRetryInterval = TimeSpan.FromMilliseconds(250);

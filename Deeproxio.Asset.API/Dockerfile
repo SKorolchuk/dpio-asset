@@ -17,4 +17,7 @@ COPY --from=build-env /app/Deeproxio.Asset.API/out .
 EXPOSE 80
 EXPOSE 443
 
+ENV HEALTHCHECK_PORT 8080
+ENV GRPC_PORT 80
+
 ENTRYPOINT ["dotnet", "Deeproxio.Asset.API.dll"]

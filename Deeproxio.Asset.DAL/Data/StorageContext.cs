@@ -5,7 +5,7 @@ using Minio;
 
 namespace Deeproxio.Asset.DAL.Data
 {
-    public class StorageContext : IStorageContext
+    internal class StorageContext : IStorageContext
     {
         public IObjectOperations StorageObjects { get; }
         public IBucketOperations BucketObjects { get; }

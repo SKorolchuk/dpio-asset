@@ -2,7 +2,7 @@
 
 namespace Deeproxio.Asset.DAL.Configuration
 {
-    public class StorageSettings : IStorageSettings
+    internal class StorageSettings : IStorageSettings
     {
         public string EndpointUrl { get; set; }
         public string BucketName { get; set; }

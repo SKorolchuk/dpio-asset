@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Deeproxio.Asset.DAL.Repositories
 {
-    public class StorageRepository : IStorageRepository
+    internal class StorageRepository : IStorageRepository
     {
         private readonly IStorageContext _context;
         private readonly IStorageSettings _settings;
@@ -34,7 +34,7 @@ namespace Deeproxio.Asset.DAL.Repositories
             _logger = logger;
         }
 
-        public async Task<bool> Delete(string id, CancellationToken cancellationToken = default)
+        public async Task<bool> DeleteAsync(string id, CancellationToken cancellationToken = default)
         {
             await EnsureBucketExists(cancellationToken);
 
@@ -54,7 +54,7 @@ namespace Deeproxio.Asset.DAL.Repositories
             }
         }
 
-        public async Task GetById(string id, Stream blobStream, CancellationToken cancellationToken = default)
+        public async Task GetByIdAsync(string id, Stream blobStream, CancellationToken cancellationToken = default)
         {
             await EnsureBucketExists(cancellationToken);
 
@@ -71,7 +71,7 @@ namespace Deeproxio.Asset.DAL.Repositories
                 );
         }
 
-        public async Task<bool> Put(string id, Stream blobStream, CancellationToken cancellationToken = default)
+        public async Task<bool> PutAsync(string id, Stream blobStream, CancellationToken cancellationToken = default)
         {
             await EnsureBucketExists(cancellationToken);
 

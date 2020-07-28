@@ -7,10 +7,10 @@ namespace Deeproxio.Asset.BLL.Contract.Services
 {
     public interface IAssetService
     {
-        Task<bool> Put(Entities.Asset assetModel, Stream blobStream, CancellationToken cancellationToken);
-        Task<Entities.Asset> GetById(string id, Stream blobStream, CancellationToken cancellationToken);
-        Task<AssetInfo> GetInfoById(string id, CancellationToken cancellationToken);
-        Task<bool> Delete(string id, CancellationToken cancellationToken);
-        Task<bool> PutMetadata(string id, AssetInfo assetInfoModel, CancellationToken cancellationToken);
+        Task<bool> PutAsync(Entities.Asset assetModel, Stream blobStream, CancellationToken cancellationToken);
+        Task<Entities.Asset> GetByIdAsync(string id, Stream blobStream, CancellationToken cancellationToken);
+        Task<AssetInfo> GetInfoByIdAsync(string id, CancellationToken cancellationToken);
+        Task<bool> DeleteAsync(string id, CancellationToken cancellationToken);
+        Task<bool> PutMetadataAsync(string id, AssetInfo assetInfoModel, CancellationToken cancellationToken);
     }
 }

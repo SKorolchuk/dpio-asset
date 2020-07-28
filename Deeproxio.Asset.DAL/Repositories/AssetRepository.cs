@@ -8,7 +8,7 @@ using MongoDB.Driver;
 
 namespace Deeproxio.Asset.DAL.Repositories
 {
-    public class AssetRepository : IAssetRepository
+    internal class AssetRepository : IAssetRepository
     {
         private readonly IAssetDataContext _context;
 
@@ -22,14 +22,19 @@ namespace Deeproxio.Asset.DAL.Repositories
             _context = context;
         }
 
-        public async Task<bool> Create(BLL.Contract.Entities.Asset asset, CancellationToken cancellationToken = default)
+        public async Task<bool> CreateAsync(BLL.Contract.Entities.Asset asset, CancellationToken cancellationToken = default)
         {
+            if (asset == null)
+            {
+                return false;
+            }
+
             await _context.Assets.InsertOneAsync(asset, new InsertOneOptions(), cancellationToken);
 
             return true;
         }
 
-        public async Task<bool> Delete(string id, CancellationToken cancellationToken = default)
+        public async Task<bool> DeleteAsync(string id, CancellationToken cancellationToken = default)
         {
             FilterDefinition<BLL.Contract.Entities.Asset> filter =
                 Builders<BLL.Contract.Entities.Asset>.Filter.Eq(asset => asset.Id, id);
@@ -41,24 +46,31 @@ namespace Deeproxio.Asset.DAL.Repositories
             return result.IsAcknowledged;
         }
 
-        public async Task<IEnumerable<BLL.Contract.Entities.Asset>> GetAll(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<BLL.Contract.Entities.Asset>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            return await _context
+            var result = await _context
                 .Assets
-                .Find(asset => true)
-                .ToListAsync(cancellationToken);
+                .FindAsync(asset => true, cancellationToken: cancellationToken);
+
+            return result.ToList();
         }
 
-        public async Task<BLL.Contract.Entities.Asset> GetById(string id, CancellationToken cancellationToken = default)
+        public async Task<BLL.Contract.Entities.Asset> GetByIdAsync(string id, CancellationToken cancellationToken = default)
         {
-            return await _context
+            var result = await _context
                 .Assets
-                .Find(asset => asset.Id == id)
-                .FirstOrDefaultAsync(cancellationToken);
+                .FindAsync(asset => asset.Id == id, cancellationToken: cancellationToken);
+
+            return result.FirstOrDefault();
         }
 
-        public async Task<bool> Update(BLL.Contract.Entities.Asset asset, CancellationToken cancellationToken = default)
+        public async Task<bool> UpdateAsync(BLL.Contract.Entities.Asset asset, CancellationToken cancellationToken = default)
         {
+            if (asset == null)
+            {
+                return false;
+            }
+
             var updateResult = await _context
                 .Assets
                 .ReplaceOneAsync(filter: item => item.Id == asset.Id, replacement: asset, cancellationToken: cancellationToken);
